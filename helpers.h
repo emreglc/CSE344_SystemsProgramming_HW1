@@ -4,4 +4,4 @@
 void show_help();
 void show_logs();
 
-#endif // HELPERS_H
+#endif

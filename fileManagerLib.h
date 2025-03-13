@@ -10,4 +10,4 @@ void append_to_file(const char *file_name, const char *content);
 void delete_file(const char *file_name);
 void delete_directory(const char *folder_name);
 
-#endif // FILE_MANAGER_LIB_H
+#endif
