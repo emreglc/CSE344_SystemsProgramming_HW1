@@ -1,12 +1,30 @@
 #include "fileManagerLib.h"
-#include <stdio.h>
-
-void create_directory(const char *folder_name) {
-    // Implementation pending
-}
+#include <sys/stat.h>
+#include <fcntl.h>
+#include <unistd.h>
+#include <string.h>
+#include <errno.h>
 
 void create_file(const char *file_name) {
-    // Implementation pending
+    int fd = open(file_name, O_CREAT | O_WRONLY, 0644);
+    if (fd == -1) {
+        print("Error creating file: ");
+        print(strerror(errno));
+        print("\n");
+        return;
+    }
+    close(fd);
+    print("File created successfully\n");
+}
+
+void create_directory(const char *folder_name) {
+    if (mkdir(folder_name, 0755) == -1) {
+        print("Error creating directory: ");
+        print(strerror(errno));
+        print("\n");
+        return;
+    }
+    print("Directory created successfully\n");
 }
 
 void list_directory(const char *folder_name) {

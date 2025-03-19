@@ -1,22 +1,28 @@
 #include "helpers.h"
 #include <stdio.h>
+#include <string.h>
+#include <unistd.h>
 
-void show_help() {
-    printf("Usage: Enter a command followed by arguments if required.\n");
-    printf("Commands:\n");
-    printf("  createDir \"folderName\" - Create a new directory\n");
-    printf("  createFile \"fileName\" - Create a new file\n");
-    printf("  listDir \"folderName\" - List all files in a directory\n");
-    printf("  listFilesByExtension \"folderName\" \".ext\" - List files with specific extension\n");
-    printf("  readFile \"fileName\" - Read a file's content\n");
-    printf("  appendToFile \"fileName\" \"new content\" - Append content to a file\n");
-    printf("  deleteFile \"fileName\" - Delete a file\n");
-    printf("  deleteDir \"folderName\" - Delete an empty directory\n");
-    printf("  showLogs - Display operation logs\n");
-    printf("  exit - Exit the program\n");
+void print(const char* message) {
+    write(STDOUT_FILENO, message, strlen(message));
+}
+
+void print_usage() {
+    print("Usage: fileManager <command> [arguments]\n");
+    print("Commands:\n");
+    print("  createDir \"folderName\" - Create a new directory\n");
+    print("  createFile \"fileName\" - Create a new file\n");
+    print("  listDir \"folderName\" - List all files in a directory\n");
+    print("  listFilesByExtension \"folderName\" \".ext\" - List files with specific extension\n");
+    print("  readFile \"fileName\" - Read a file's content\n");
+    print("  appendToFile \"fileName\" \"new content\" - Append content to a file\n");
+    print("  deleteFile \"fileName\" - Delete a file\n");
+    print("  deleteDir \"folderName\" - Delete an empty directory\n");
+    print("  showLogs - Display operation logs\n");
+    print("  exit - Exit the program\n");
 }
 
 void show_logs() {
-    printf("Operation logs:\n");
+    print("Operation logs:\n");
     // Implementation pending
 }

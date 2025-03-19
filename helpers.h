@@ -1,7 +1,8 @@
 #ifndef HELPERS_H
 #define HELPERS_H
 
-void show_help();
+void print(const char* message);
+void print_usage();
 void show_logs();
 
 #endif
