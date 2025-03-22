@@ -16,17 +16,7 @@ void trim_quotes(char* str) {
 
 int main(int argc, char* argv[]) {
     if (argc < 2) {
-        print("Usage: fileManager <command> [arguments]\n");
-        print("Commands:\n");
-        print("  createDir \"folderName\" - Create a new directory\n");
-        print("  createFile \"fileName\" - Create a new file\n");
-        print("  listDir \"folderName\" - List all files in a directory\n");
-        print("  listFilesByExtension \"folderName\" \".txt\" - List files with specific extension\n");
-        print("  readFile \"fileName\" - Read a file's content\n");
-        print("  appendToFile \"fileName\" \"new content\" - Append content to a file\n");
-        print("  deleteFile \"fileName\" - Delete a file\n");
-        print("  deleteDir \"folderName\" - Delete an empty directory\n");
-        print("  showLogs - Display operation logs\n");
+        print_usage();
         return 1;
     }
 

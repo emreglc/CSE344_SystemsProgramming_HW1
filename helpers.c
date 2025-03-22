@@ -27,7 +27,6 @@ void print_usage() {
     print("  deleteFile \"fileName\" - Delete a file\n");
     print("  deleteDir \"folderName\" - Delete an empty directory\n");
     print("  showLogs - Display operation logs\n");
-    print("  exit - Exit the program\n");
 }
 
 // Helper function to convert an integer (0-99) to a 2-character string
