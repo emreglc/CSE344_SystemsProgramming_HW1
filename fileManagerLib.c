@@ -12,6 +12,14 @@
 #define BUFFER_SIZE 1024
 
 void create_file(const char* file_name) {
+    // Check if file already exists
+    if (access(file_name, F_OK) != -1) {
+        print("Error: File \"");
+        print(file_name);
+        print("\" already exists.\n");
+        return;
+    }
+
     int fd = open(file_name, O_CREAT | O_WRONLY, 0644);
     if (fd == -1) {
         print("Error creating file: ");
@@ -21,9 +29,23 @@ void create_file(const char* file_name) {
     }
     close(fd);
     print("File created successfully\n");
+
+    char log_message[BUFFER_SIZE] = "File \"";
+    strcat(log_message, file_name);
+    strcat(log_message, "\" created successfully.");
+    log_success(log_message);
 }
 
 void create_directory(const char* folder_name) {
+    // Check if directory already exists
+    struct stat dir_stat;
+    if (stat(folder_name, &dir_stat) != -1 && S_ISDIR(dir_stat.st_mode)) {
+        print("Error: Directory \"");
+        print(folder_name);
+        print("\" already exists.\n");
+        return;
+    }
+
     if (mkdir(folder_name, 0755) == -1) {
         print("Error creating directory: ");
         print(strerror(errno));
@@ -31,6 +53,11 @@ void create_directory(const char* folder_name) {
         return;
     }
     print("Directory created successfully\n");
+
+    char log_message[BUFFER_SIZE] = "Directory \"";
+    strcat(log_message, folder_name);
+    strcat(log_message, "\" created successfully.");
+    log_success(log_message);
 }
 
 void list_directory(const char* folder_name) {
@@ -57,10 +84,13 @@ void list_directory(const char* folder_name) {
         // If execlp fails, print an error
         print("Error: Failed to execute ls command.\n");
         exit(EXIT_FAILURE);
-    }
-    else {
+    } else {
         // Parent process: Wait for child to complete
         wait(NULL);
+        char log_message[BUFFER_SIZE] = "Listed directory \"";
+        strcat(log_message, folder_name);
+        strcat(log_message, "\" successfully.");
+        log_success(log_message);
     }
 }
 
@@ -83,15 +113,31 @@ void list_files_by_extension(const char* folder_name, const char* extension) {
 
     if (pid == 0) {
         // Child process: Execute "find folder_name -type f -name '*.extension'"
-        execlp("find", "find", folder_name, "-type", "f", "-name", extension, (char*)NULL);
+        
+        // Construct the correct pattern with wildcard
+        char pattern[BUFFER_SIZE] = "*";
+        strcat(pattern, extension);  // Example: "*.txt"
 
-        // If execlp fails, print an error
+        execlp("find", "find", folder_name, "-type", "f", "-name", pattern, (char*)NULL);
+
+        // If execlp fails
         print("Error: Failed to execute find command.\n");
         exit(EXIT_FAILURE);
-    }
-    else {
+    } else {
         // Parent process: Wait for child to complete
-        wait(NULL);
+        int status;
+        waitpid(pid, &status, 0);
+
+        if (WIFEXITED(status) && WEXITSTATUS(status) == 0) {
+            char log_message[BUFFER_SIZE] = "Listed files with extension \"";
+            strcat(log_message, extension);
+            strcat(log_message, "\" in directory \"");
+            strcat(log_message, folder_name);
+            strcat(log_message, "\" successfully.");
+            log_success(log_message);
+        } else {
+            print("Error: Failed to list files.\n");
+        }
     }
 }
 
@@ -166,6 +212,12 @@ void delete_file(const char *file_name) {
         print("File \"");
         print(file_name);
         print("\" deleted successfully.\n");
+
+        char log_message[BUFFER_SIZE] = "File \"";
+        strcat(log_message, file_name);
+        strcat(log_message, "\" deleted successfully.");
+        log_success(log_message);
+
         _exit(EXIT_SUCCESS);
     } else {  // Parent process
         waitpid(pid, NULL, 0);
@@ -204,6 +256,12 @@ void delete_directory(const char *dir_name) {
         print("Directory \"");
         print(dir_name);
         print("\" deleted successfully.\n");
+
+        char log_message[BUFFER_SIZE] = "Directory \"";
+        strcat(log_message, dir_name);
+        strcat(log_message, "\" deleted successfully.");
+        log_success(log_message);
+
         _exit(EXIT_SUCCESS);
     } else {  // Parent process
         waitpid(pid, NULL, 0);
